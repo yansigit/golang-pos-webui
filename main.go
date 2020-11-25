@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
 	"koisk-noti-desktop/data"
@@ -64,6 +63,5 @@ func storeOrderList(ctx iris.Context) {
 		log.Fatal(err)
 	}
 	data.InsertOrderList(&order)
-	fmt.Println(order)
-	ctx.JSON(iris.Map{"state": "OK"})
+	ctx.JSON(iris.Map{"state": "OK", "orderNumber": order.Id})
 }

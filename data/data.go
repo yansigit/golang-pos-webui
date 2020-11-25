@@ -62,8 +62,10 @@ func init() {
 	}
 }
 
-func InsertOrderList(orderList *Order) {
-	db.Create(orderList)
+func InsertOrderList(orderList *Order) *gorm.DB {
+	result := db.Create(orderList)
+	// print(result)
+	return result
 }
 
 func FindOrderList(id uint) (orderList Order) {
