@@ -73,6 +73,46 @@ func InsertOrderList(test []byte) uint {
 	return order.ID
 }
 
+func _InsertOrderList(test []byte) uint {
+	var order Order
+	err := json.Unmarshal(test, &order)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var tempOrder Order
+	tempOrder = Order{
+		IsConfirmed: false,
+		Menus:       nil,
+		TotalPrice:  order.TotalPrice,
+	}
+	db.Create(&tempOrder)
+
+	var tempMenus = make([]Menu, len(order.Menus))
+	copy(tempMenus, order.Menus)
+	for i, _ := range tempMenus {
+		tempMenus[i].OrderId = tempOrder.ID
+		tempMenus[i].Options = nil
+	}
+	db.Create(&tempMenus)
+
+	for i, _ := range tempMenus {
+		var tempOptions = make([]Option, len(order.Menus[i].Options))
+		copy(tempOptions, order.Menus[i].Options)
+		for j, _ := range tempOptions {
+			tempOptions[j].MenuId = tempMenus[i].ID
+			if tempOptions[j].Quantity > 0 {
+				db.Create(&tempOptions[j])
+			}
+		}
+	}
+
+	tempOrder.Menus = tempMenus
+	db.Save(&tempOrder)
+
+	return tempOrder.ID
+}
+
 func FindOrderList(id uint) (orderList Order) {
 	db.First(&orderList, id)
 	return orderList
