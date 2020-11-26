@@ -39,6 +39,21 @@ func initWeb() {
 func index(ctx iris.Context) {
 	var orders []data.Order
 	data.Paging(1, &orders)
+
+	for i, _ := range orders {
+		var menus []data.Menu
+		data.GetMenusFromOrder(orders[i], &menus)
+		orders[i].Menus = make([]data.Menu, len(menus))
+		copy(orders[i].Menus, menus)
+
+		for j, _ := range orders[i].Menus {
+			var options []data.Option
+			data.GetOptionsFromMenu(orders[i].Menus[j], &options)
+			orders[i].Menus[j].Options = make([]data.Option, len(options))
+			copy(orders[i].Menus[j].Options, options)
+		}
+	}
+
 	_ = ctx.View("index.html", iris.Map{
 		"order_list": orders,
 	})

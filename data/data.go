@@ -62,6 +62,14 @@ func init() {
 	}
 }
 
+func GetMenusFromOrder(order Order, menu *[]Menu) {
+	_ = db.Model(order).Association("Menus").Find(menu)
+}
+
+func GetOptionsFromMenu(menu Menu, option *[]Option) {
+	_ = db.Model(menu).Association("Options").Find(option)
+}
+
 func InsertOrderList(test []byte) uint {
 	var order Order
 	err := json.Unmarshal(test, &order)

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/css/styles.min.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
 </head>
 
 <body>
@@ -28,18 +29,26 @@
         {% for order in order_list %}
         <li class="list-group-item">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">주문번호: {{ order.ID }} (총 결제: 5900원)</h5>
+                <div class="card-header order-header">
+                    <h5 class="mb-0">주문번호: {{ order.ID }} (총 결제: {{ order.TotalPrice }}원)</h5>
+                    {% if order.IsConfirmed %}
+                        <span class="badge badge-success">결제 완료 {{ order.IsConfirmed }}</span>
+                    {% else %}
+                        <span class="badge badge-warning">결제 대기중 {{ order.IsConfirmed }}</span>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     {% for menu in order.Menus %}
-                    <strong>아메리카노 (2700원)</strong>
+                    <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원)</strong>
+                    <span class="badge badge-danger">포장</span>
+                    <span class="badge badge-info">텀블러</span>
                     <ul>
-                        <li>본품: (2200원)</li>
-                        <li>샷 추가: 1 (500원)</li>
-                        <li>포장: Y (0원)</li>
-                        <li>연하게 : Y (0원)</li>
-                        <li>텀블러 : Y (0원)</li>
+                        <li>본품: ({{ menu.Price }}원)</li>
+                        {% for option in menu.Options %}
+                        {% if option.Quantity > 0 %}
+                            <li>{{ option.Name }}: {{ option.Quantity }} ({{ option.Price }}원)</li>
+                        {% endif %}
+                        {% endfor %}
                     </ul>
                     {% endfor %}
                 </div>
