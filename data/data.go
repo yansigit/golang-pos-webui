@@ -1,10 +1,10 @@
 package data
 
 import (
+	"encoding/json"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
-	"strconv"
 )
 
 //type OrderList struct {
@@ -17,31 +17,31 @@ import (
 
 type Option struct {
 	gorm.Model
-	Id       uint   `gorm:"primaryKey;unique;autoIncrement"`
+	//Id       uint   `gorm:"primaryKey;unique;autoIncrement"`
 	Name     string `json:"name"`
 	Price    int    `json:"price"`
 	Quantity int    `json:"quantity"`
-	MenuId   int
+	MenuId   uint
 }
 
 type Menu struct {
 	gorm.Model
-	Id         uint     `gorm:"primaryKey;unique;autoIncrement"`
+	//Id         uint     `gorm:"primaryKey;unique;autoIncrement"`
 	Name       string   `json:"name"`
-	Options    []Option `json:"options"`
+	Options    []Option `gorm:"foreignKey:MenuId;references:ID" json:"options"`
 	Price      int      `json:"price"`
 	TotalPrice int      `json:"totalPrice"`
 	IsTakeOut  bool     `json:"isTakeOut"`
 	IsTumbler  bool     `json:"isTumbler"`
 	Temp       string   `json:"temp"`
-	OrderId    int
+	OrderId    uint
 }
 
 type Order struct {
 	gorm.Model
-	Id          uint   `gorm:"primaryKey;unique;autoIncrement"`
+	//Id          uint   `gorm:"primaryKey;unique;autoIncrement"`
 	IsConfirmed bool   `gorm:"default:false"`
-	Menus       []Menu `json:"menus"`
+	Menus       []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
 	TotalPrice  int    `json:"totalPrice"`
 }
 
@@ -62,10 +62,15 @@ func init() {
 	}
 }
 
-func InsertOrderList(orderList *Order) *gorm.DB {
-	result := db.Create(orderList)
-	// print(result)
-	return result
+func InsertOrderList(test []byte) uint {
+	var order Order
+	err := json.Unmarshal(test, &order)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db.Create(&order)
+	return order.ID
 }
 
 func FindOrderList(id uint) (orderList Order) {
@@ -73,9 +78,11 @@ func FindOrderList(id uint) (orderList Order) {
 	return orderList
 }
 
-func Paginate(_page string, _pageSize string) func(db *gorm.DB) *gorm.DB {
-	page, _ := strconv.Atoi(_page)
-	pageSize, _ := strconv.Atoi(_pageSize)
+func Paging(page int, this interface{}) {
+	db.Scopes(paginate(page, 10)).Find(this)
+}
+
+func paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	if pageSize < 0 {
 		pageSize = 0
 	}

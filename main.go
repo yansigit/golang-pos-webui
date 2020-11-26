@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
+	"crypto/md5"
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
 	"koisk-noti-desktop/data"
-	"log"
-	"time"
 )
 
 func main() {
@@ -37,14 +36,11 @@ func initWeb() {
 	_ = app.Listen(":8080")
 }
 
-var startTime = time.Now()
-
 func index(ctx iris.Context) {
+	var orders []data.Order
+	data.Paging(1, &orders)
 	_ = ctx.View("index.html", iris.Map{
-		"title":           "Hi Page",
-		"name":            "iris",
-		"serverStartTime": startTime,
-		"order_list":      []int{1, 2, 3},
+		"order_list": orders,
 	})
 }
 
@@ -57,11 +53,10 @@ func queue(ctx iris.Context) {
 
 func storeOrderList(ctx iris.Context) {
 	test, _ := ctx.GetBody()
-	var order data.Order
-	err := json.Unmarshal(test, &order)
-	if err != nil {
-		log.Fatal(err)
-	}
-	data.InsertOrderList(&order)
-	ctx.JSON(iris.Map{"state": "OK", "orderNumber": order.Id})
+	fmt.Printf("%x\n", md5.Sum(test))
+	id := data.InsertOrderList(test)
+
+	response := iris.Map{"state": "OK", "orderNumber": id}
+	ctx.JSON(response)
+	println(response)
 }

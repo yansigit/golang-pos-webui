@@ -29,9 +29,10 @@
         <li class="list-group-item">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">주문번호: 1013 (총 결제: 5900원)</h5>
+                    <h5 class="mb-0">주문번호: {{ order.ID }} (총 결제: 5900원)</h5>
                 </div>
                 <div class="card-body">
+                    {% for menu in order.Menus %}
                     <strong>아메리카노 (2700원)</strong>
                     <ul>
                         <li>본품: (2200원)</li>
@@ -40,34 +41,11 @@
                         <li>연하게 : Y (0원)</li>
                         <li>텀블러 : Y (0원)</li>
                     </ul>
-                    <strong>카페라떼 (3200원)</strong>
-                    <ul>
-                        <li>본품: (2800원)</li>
-                        <li>샷 추가: 1 (500원)</li>
-                        <li>포장: Y (0원)</li>
-                        <li>연하게 : Y (0원)</li>
-                        <li>텀블러 : Y (0원)</li>
-                    </ul>
+                    {% endfor %}
                 </div>
             </div>
         </li>
         {% endfor %}
-        <li class="list-group-item">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">주문번호: 1012</h5>
-                </div>
-                <div class="card-body"></div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">주문번호: 1012</h5>
-                </div>
-                <div class="card-body"></div>
-            </div>
-        </li>
     </ul>
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
