@@ -127,7 +127,7 @@ func FindOrderList(id uint) (orderList Order) {
 }
 
 func Paging(page int, this interface{}) {
-	db.Scopes(paginate(page, 10)).Find(this)
+	db.Scopes(paginate(page, 10)).Order("id desc").Find(this)
 }
 
 func paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
