@@ -40,8 +40,12 @@
                 <div class="card-body">
                     {% for menu in order.Menus %}
                     <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원)</strong>
+                    {% if menu.IsTakeOut %}
                     <span class="badge badge-danger">포장</span>
+                    {% endif %}
+                    {% if menu.IsTumbler %}
                     <span class="badge badge-info">텀블러</span>
+                    {% endif %}
                     <ul>
                         <li>본품: ({{ menu.Price }}원)</li>
                         {% for option in menu.Options %}
