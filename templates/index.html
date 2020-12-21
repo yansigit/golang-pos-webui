@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/css/styles.min.css">
     <link rel="stylesheet" href="/assets/css/index.css">
+    <script src="../assets/js/ion.sound.min.js"></script>
 </head>
 
 <body>
@@ -18,50 +19,55 @@
                 id="navcol-1">
                 <ul class="nav navbar-nav">
                     <li class="nav-item"><a class="nav-link active" href="#">주문 내역</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/queue">대기 번호 표시</a></li>
+<!--                    <li class="nav-item"><a class="nav-link" href="/queue">대기 번호 표시</a></li>-->
                 </ul>
-                <form class="form-inline mr-auto" target="_self">
-                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div>
-                </form><a class="btn btn-light action-button" role="button" href="#">Action </a></div>
+<!--                <form class="form-inline mr-auto" target="_self">-->
+<!--                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div>-->
+<!--                </form><a class="btn btn-light action-button" role="button" href="#">Action </a></div>-->
         </div>
     </nav>
     <ul class="list-group">
-        {% for order in order_list %}
-        <li class="list-group-item">
-            <div class="card">
-                <div class="card-header order-header">
-                    <h5 class="mb-0">주문번호: {{ order.ID }} (총 결제: {{ order.TotalPrice }}원)</h5>
-                    {% if order.IsConfirmed %}
-                        <span class="badge badge-success">결제 완료 {{ order.IsConfirmed }}</span>
-                    {% else %}
-                        <span class="badge badge-warning">결제 대기중 {{ order.IsConfirmed }}</span>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    {% for menu in order.Menus %}
-                    <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원)</strong>
-                    {% if menu.IsTakeOut %}
-                    <span class="badge badge-danger">포장</span>
-                    {% endif %}
-                    {% if menu.IsTumbler %}
-                    <span class="badge badge-info">텀블러</span>
-                    {% endif %}
-                    <ul>
-                        <li>본품: ({{ menu.Price }}원)</li>
-                        {% for option in menu.Options %}
-                        {% if option.Quantity > 0 %}
-                            <li>{{ option.Name }}: {{ option.Quantity }} ({{ option.Price }}원)</li>
-                        {% endif %}
-                        {% endfor %}
-                    </ul>
-                    {% endfor %}
-                </div>
-            </div>
-        </li>
-        {% endfor %}
+
     </ul>
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/ion.sound.min.js"></script>
+
+    <script>
+      ion.sound({
+        sounds: [
+          {
+            name: "bell_ring"
+          }
+        ],
+        volume: 0.9,
+        path: "/assets/sounds/",
+        preload: true
+      });
+
+      function updateConfirmation( orderNumber ) {
+        jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
+          console.log( "Data Loaded: " + data );
+        });
+        window.location.reload();
+      }
+
+      jQuery.get( "/test", function( data ) {
+        jQuery( ".list-group" ).replaceWith( data );
+      });
+
+      setInterval(function() {
+        jQuery.get( "/test", function( data ) {
+          jQuery( ".list-group" ).replaceWith( data );
+        });
+
+        jQuery.get( "/queue", function( data ) {
+          if (data.new === true) {
+            ion.sound.play("bell_ring");
+          }
+        });
+      }, 7000);
+    </script>
 </body>
 
 </html>
