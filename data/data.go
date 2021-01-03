@@ -40,7 +40,7 @@ type Menu struct {
 type Order struct {
 	gorm.Model
 	//Id          uint   `gorm:"primaryKey;unique;autoIncrement"`
-	IsConfirmed bool   `gorm:"default:false"`
+	IsConfirmed int    `gorm:"default:0"`
 	Menus       []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
 	TotalPrice  int    `json:"totalPrice"`
 }
@@ -90,7 +90,7 @@ func _InsertOrderList(test []byte) uint {
 
 	var tempOrder Order
 	tempOrder = Order{
-		IsConfirmed: false,
+		IsConfirmed: 0,
 		Menus:       nil,
 		TotalPrice:  order.TotalPrice,
 	}
@@ -126,6 +126,11 @@ func FindOrderList(id uint) (orderList Order) {
 	return orderList
 }
 
+func FindOrderListWithStatus(status int) (orders []Order) {
+	db.Where("is_confirmed = ?", status).Find(&orders)
+	return orders
+}
+
 func Paging(page int, this interface{}) {
 	db.Scopes(paginate(page, 10)).Order("id desc").Find(this)
 }
@@ -157,7 +162,10 @@ func paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 // 컨펌 상태만 업데이트
 func UpdateOrderListConfirmation(orderNumber uint) {
 	orderList := FindOrderList(orderNumber)
-	db.Model(&orderList).Update("IsConfirmed", !orderList.IsConfirmed)
+	if orderList.IsConfirmed < 2 {
+		orderList.IsConfirmed += 1
+	}
+	db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
 }
 
 func DeleteOrderList(orderNumber uint) {

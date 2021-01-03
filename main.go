@@ -29,7 +29,9 @@ func initWeb() {
 
 	app.Get("/", index)
 	app.Get("/queue", queue)
-	app.Get("/test", refreshedOrderList)
+	app.Get("/orders", refreshedOrderList)
+	app.Get("/waits", refreshWaitNumbers)
+	app.Get("/out-display", outDisplay)
 
 	app.Post("/", storeOrderList)
 	app.Post("/action", action)
@@ -43,25 +45,19 @@ func initWeb() {
 }
 
 func index(ctx iris.Context) {
-	var orders []data.Order
-	data.Paging(1, &orders)
+	_ = ctx.View("index.html")
+}
 
-	for i, _ := range orders {
-		var menus []data.Menu
-		data.GetMenusFromOrder(orders[i], &menus)
-		orders[i].Menus = make([]data.Menu, len(menus))
-		copy(orders[i].Menus, menus)
+func outDisplay(ctx iris.Context) {
+	var confirmedOrders []data.Order
+	var unconfirmedOrders []data.Order
 
-		for j, _ := range orders[i].Menus {
-			var options []data.Option
-			data.GetOptionsFromMenu(orders[i].Menus[j], &options)
-			orders[i].Menus[j].Options = make([]data.Option, len(options))
-			copy(orders[i].Menus[j].Options, options)
-		}
-	}
+	confirmedOrders = data.FindOrderListWithStatus(1)
+	unconfirmedOrders = data.FindOrderListWithStatus(0)
 
-	_ = ctx.View("index.html", iris.Map{
-		"order_list": orders,
+	_ = ctx.View("displayWaitingNumbers.html", iris.Map{
+		"confirmed_orders":   confirmedOrders,
+		"unconfirmed_orders": unconfirmedOrders,
 	})
 }
 
@@ -89,6 +85,57 @@ func refreshedOrderList(ctx iris.Context) {
 
 	buf := new(bytes.Buffer)
 	ctx.Application().View(buf, "refreshedOrderList.html", "refreshedOrderList.html", args)
+	ctx.WriteString(buf.String())
+}
+
+func refreshWaitNumbers(ctx iris.Context) {
+	var confirmedOrders []data.Order
+	var unconfirmedOrders []data.Order
+
+	confirmedOrders = data.FindOrderListWithStatus(1)
+	unconfirmedOrders = data.FindOrderListWithStatus(0)
+
+	var confirmedOrdersMashed [][]data.Order
+	length := len(confirmedOrders)
+	for i := 0; i < length; i += 3 { // 0,1,2,3,4,5 length:6
+		if i >= length {
+			break
+		}
+		if length-i < 3 {
+			if length-i == 1 {
+				confirmedOrdersMashed = append(confirmedOrdersMashed, []data.Order{confirmedOrders[i]})
+			} else if length-i == 2 {
+				confirmedOrdersMashed = append(confirmedOrdersMashed, []data.Order{confirmedOrders[i], confirmedOrders[i+1]})
+			}
+			break
+		}
+		confirmedOrdersMashed = append(confirmedOrdersMashed, []data.Order{confirmedOrders[i], confirmedOrders[i+1], confirmedOrders[i+2]})
+	}
+
+	var unconfirmedOrdersMashed [][]data.Order
+	length = len(unconfirmedOrders)
+	for i := 0; i < length; i += 3 { // 0,1,2,3,4,5 length:6
+		if i >= length {
+			break
+		}
+		if length-i < 3 {
+			if length-i == 1 {
+				unconfirmedOrdersMashed = append(unconfirmedOrdersMashed, []data.Order{unconfirmedOrders[i]})
+			} else if length-i == 2 {
+				unconfirmedOrdersMashed = append(unconfirmedOrdersMashed, []data.Order{unconfirmedOrders[i], unconfirmedOrders[i+1]})
+			}
+			break
+		}
+		unconfirmedOrdersMashed = append(unconfirmedOrdersMashed, []data.Order{unconfirmedOrders[i], unconfirmedOrders[i+1], unconfirmedOrders[i+2]})
+	}
+
+	args := map[string]interface{}{
+		"unconfirmed_orders": unconfirmedOrdersMashed,
+		"confirmed_orders":   confirmedOrdersMashed,
+	}
+
+	buf := new(bytes.Buffer)
+	ctx.Application().View(buf, "waitingNumberTable.html", "refreshedOrderList.html", args)
 	ctx.WriteString(buf.String())
 }
 

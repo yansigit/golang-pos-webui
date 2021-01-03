@@ -1,0 +1,29 @@
+<table class="w-100" id="waiting-num-table">
+    <tr>
+        <td colspan="3"><div class="w-100 text-center card-header border"><h4 style="margin:0">조리완료</h4></div></td>
+    </tr>
+    <tr>
+        <td class="border rounded alert-light text-center" colspan="3">손님이 음식을 가져가시면 아래 주문번호 버튼을 눌러 완료하세요</td>
+    </tr>
+    {% for orders in confirmed_orders %}
+    <tr class="card-body">
+        {% for order in orders %}
+        <td><button class="btn btn-primary btn-lg btn-block" onclick="updateConfirmation({{ order.ID }})">{{ order.ID }}</button></td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr style="height: 40px"></tr>
+    <tr>
+        <td colspan="3"><div class="w-100 text-center card-header border"><h4 style="margin:0;">결제완료</h4></div></td>
+    </tr>
+    <tr>
+        <td class="border rounded alert-light text-center" colspan="3">음식이 준비되면 아래 주문번호 버튼을 누르세요</td>
+    </tr>
+    {% for orders in unconfirmed_orders %}
+    <tr class="card-body">
+        {% for order in orders %}
+        <td><button class="btn btn-info btn-lg btn-block" onclick="updateConfirmation({{ order.ID }})">{{ order.ID }}</button></td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>

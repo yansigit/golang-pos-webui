@@ -24,11 +24,21 @@
 <!--                <form class="form-inline mr-auto" target="_self">-->
 <!--                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" id="search-field" name="search"></div>-->
 <!--                </form><a class="btn btn-light action-button" role="button" href="#">Action </a></div>-->
+
+            </div>
         </div>
     </nav>
-    <ul class="list-group">
+    <div class="container">
+        <div class="row">
+            <ul class="list-group col-6"></ul>
+            <div class="col-6" style="padding: 0">
+                <table class="w-100" id="waiting-num-table">
 
-    </ul>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/js/ion.sound.min.js"></script>
@@ -52,13 +62,21 @@
         window.location.reload();
       }
 
-      jQuery.get( "/test", function( data ) {
+      jQuery.get( "/orders", function( data ) {
         jQuery( ".list-group" ).replaceWith( data );
       });
 
+      jQuery.get( "/waits", function( data ) {
+        jQuery( "#waiting-num-table" ).replaceWith( data );
+      });
+
       setInterval(function() {
-        jQuery.get( "/test", function( data ) {
+        jQuery.get( "/orders", function( data ) {
           jQuery( ".list-group" ).replaceWith( data );
+        });
+
+        jQuery.get( "/waits", function( data ) {
+          jQuery( "#waiting-num-table" ).replaceWith( data );
         });
 
         jQuery.get( "/queue", function( data ) {
@@ -66,8 +84,81 @@
             ion.sound.play("bell_ring");
           }
         });
-      }, 7000);
+      }, 3000);
     </script>
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start">
+        <!-- Grid container -->
+        <div class="container p-4">
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Footer Content</h5>
+
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste atque ea quis
+                        molestias. Fugiat pariatur maxime quis culpa corporis vitae repudiandae aliquam
+                        voluptatem veniam, est atque cumque eum delectus sint!
+                    </p>
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Links</h5>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#!" class="text-dark">Link 1</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark">Link 2</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark">Link 3</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark">Link 4</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-0">Links</h5>
+
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="#!" class="text-dark">Link 1</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark">Link 2</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark">Link 3</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-dark">Link 4</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+        </div>
+        <!-- Grid container -->
+
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+            © 2020 Copyright:
+            <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
 </body>
 
 </html>
