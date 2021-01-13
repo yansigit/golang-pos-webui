@@ -52,12 +52,19 @@ func outDisplay(ctx iris.Context) {
 	var confirmedOrders []data.Order
 	var unconfirmedOrders []data.Order
 
-	confirmedOrders = data.FindOrderListWithStatus(1)
-	unconfirmedOrders = data.FindOrderListWithStatus(0)
+	confirmedOrders = data.FindOrderListWithStatus(1, 5)
+	unconfirmedOrders = data.FindOrderListWithStatus(0, 10)
+
+	var unconfirmedOrdersArray [][]data.Order
+	if len(unconfirmedOrders) > 5 {
+		unconfirmedOrdersArray = append(unconfirmedOrdersArray, unconfirmedOrders[:5], unconfirmedOrders[5:])
+	} else {
+		unconfirmedOrdersArray = append(unconfirmedOrdersArray, unconfirmedOrders)
+	}
 
 	_ = ctx.View("displayWaitingNumbers.html", iris.Map{
-		"confirmed_orders":   confirmedOrders,
-		"unconfirmed_orders": unconfirmedOrders,
+		"confirmed_orders":         confirmedOrders,
+		"unconfirmed_orders_array": unconfirmedOrdersArray,
 	})
 }
 
@@ -92,8 +99,8 @@ func refreshWaitNumbers(ctx iris.Context) {
 	var confirmedOrders []data.Order
 	var unconfirmedOrders []data.Order
 
-	confirmedOrders = data.FindOrderListWithStatus(1)
-	unconfirmedOrders = data.FindOrderListWithStatus(0)
+	confirmedOrders = data.FindOrderListWithStatus(1, 40)
+	unconfirmedOrders = data.FindOrderListWithStatus(0, 40)
 
 	var confirmedOrdersMashed [][]data.Order
 	length := len(confirmedOrders)
@@ -144,6 +151,10 @@ func action(ctx iris.Context) {
 	if action == "confirm" {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
 		data.UpdateOrderListConfirmation(uint(orderNumber))
+	}
+	if action == "cancel" {
+		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
+		data.CancelOrderList(uint(orderNumber))
 	}
 }
 

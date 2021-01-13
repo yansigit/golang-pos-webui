@@ -9,12 +9,15 @@
                 <span class="badge badge-warning p-2">조리 완료</span>
                 {% elif order.IsConfirmed == 0 %}
                 <span class="badge badge-light p-2">조리 중</span>
-<!--                <button type="button" class="btn btn-danger ml-auto kiosk-confirm-button" onclick="updateConfirmation({{ order.ID }})">수령 완료</button>-->
+                <button type="button" class="btn btn-danger ml-auto kiosk-confirm-button" onclick="cancelOrderList({{ order.ID }})">주문 취소</button>
                 {% elif order.IsConfirmed == 2 %}
                 <span class="badge badge-success p-2">수령 완료</span>
+                {% elif order.IsConfirmed == 3 %}
+                <span class="badge badge-dark p-2">취소 완료</span>
                 {% endif %}
             </div>
             <div class="card-body">
+                {% if order.IsConfirmed != 3 %}
                 {% for menu in order.Menus %}
                 <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원)</strong>
                 {% if menu.IsTakeOut %}
@@ -32,6 +35,9 @@
                     {% endfor %}
                 </ul>
                 {% endfor %}
+                {% else %}
+                <span>취소된 주문입니다</span>
+                {% endif %}
             </div>
         </div>
     </li>

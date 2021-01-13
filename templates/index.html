@@ -62,6 +62,13 @@
         window.location.reload();
       }
 
+      function cancelOrderList( orderNumber ) {
+        jQuery.post( "/action", { action: "cancel", orderNumber: orderNumber }, function( data ) {
+          console.log( "Data Loaded: " + data );
+        });
+        window.location.reload();
+      }
+
       jQuery.get( "/orders", function( data ) {
         jQuery( ".list-group" ).replaceWith( data );
       });

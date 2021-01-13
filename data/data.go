@@ -126,8 +126,8 @@ func FindOrderList(id uint) (orderList Order) {
 	return orderList
 }
 
-func FindOrderListWithStatus(status int) (orders []Order) {
-	db.Where("is_confirmed = ?", status).Find(&orders)
+func FindOrderListWithStatus(status int, limit int) (orders []Order) {
+	db.Where("is_confirmed = ?", status).Limit(limit).Find(&orders)
 	return orders
 }
 
@@ -165,6 +165,13 @@ func UpdateOrderListConfirmation(orderNumber uint) {
 	if orderList.IsConfirmed < 2 {
 		orderList.IsConfirmed += 1
 	}
+	db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
+}
+
+// 주문 취소
+func CancelOrderList(orderNumber uint) {
+	orderList := FindOrderList(orderNumber)
+	orderList.IsConfirmed = 3
 	db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
 }
 

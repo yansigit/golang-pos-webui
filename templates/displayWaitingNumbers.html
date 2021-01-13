@@ -6,26 +6,43 @@
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/css/styles.min.css">
+    <style>
+        @font-face {
+            font-family: 'MaplestoryOTFBold';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            font-family: 'MaplestoryOTFBold',serif;
+        }
+    </style>
 </head>
 <body class="bg-dark row">
-    <section class="col">
-        <h1 class="card-header badge-light text-center w-100" style="font-size: xxx-large">완료</h1>
-        <ul class="list-group bg-dark">
-            {% for order in confirmed_orders %}
-            <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: xxx-large">{{order.ID}}</h1></li>
-            {% endfor %}
-        </ul>
+    <section class="col-4">
+        <h1 class="card-header badge-dark text-center text-white" style="font-size: 100px">완료</h1>
+
+        <div class="row">
+            <ul class="list-group bg-dark col">
+                {% for order in confirmed_orders %}
+                <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: 100px;">{{order.ID}}</h1></li>
+                {% endfor %}
+            </ul>
+        </div>
     </section>
-    <section class="col">
-        <h1 class="card-header badge-light text-center" style="font-size: xxx-large">조리 중</h1>
-        <ul class="list-group bg-dark">
-            {% for order in unconfirmed_orders %}
-            <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: xxx-large">{{order.ID}}</h1></li>
+    <section class="col-8">
+        <h1 class="card-header badge-dark text-center text-white" style="font-size: 100px">조리중</h1>
+
+        <div class="row">
+            {% for orders in unconfirmed_orders_array %}
+                <ul class="list-group bg-dark col">
+                {% for order in orders %}
+                <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: 100px;" class="text-white">{{order.ID}}</h1></li>
+                {% endfor %}
+                </ul>
             {% endfor %}
-        </ul>
-    </section>
-    <section class="col">
-        <h1 class="card-header badge-light text-center" style="font-size: xxx-large">뭐로하지</h1>
+        </div>
     </section>
     <script>
         setInterval(() => {window.location.reload();}, 3000)
