@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>정산</title>
+    <style>
+        table {
+            width: 300px;
+        }
+        .td-header {
+            border-bottom: 1px solid black; font-weight: bold
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption><h3>판매집계표</h3><hr></caption>
+        <caption>일시: {{date}}<hr></caption>
+        <thead>
+        <tr>
+            <th>구분</th>
+            <th>건수</th>
+            <th>금액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="td-header">총매출액</td>
+            <td class="td-header">{{order_list|length}}</td>
+            <td class="td-header">{{totalPrice}}</td>
+        </tr>
+        <tr>
+            <td>텀블러할인</td>
+            <td>{{discountCnt}}</td>
+            <td>{{discountPrice}}</td>
+        </tr>
+        <tr>
+            <td>취소</td>
+            <td>{{canceledCnt}}</td>
+            <td>{{canceledPrice}}</td>
+        </tr>
+        <tr>
+            <td>순매출액</td>
+            <td>{{order_list|length - canceledCnt}}</td>
+            <td>{{totalPrice - canceledPrice - discountPrice}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <caption><h3>메뉴별 판매현황</h3><hr></caption>
+        <caption>일시: {{date}}<hr></caption>
+        <thead>
+        <tr>
+            <th>구분</th>
+            <th>수량</th>
+            <th>금액</th>
+            <th>%</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="td-header">전체</td>
+            <td class="td-header">{{order_list|length}}</td>
+            <td class="td-header">{{totalPrice}}</td>
+            <td class="td-header"></td>
+        </tr>
+        {% for k, v in menuTable %}
+        <tr>
+            <td>{{k}}</td>
+            <td>{{v.0}}</td>
+            <td>{{v.1}}</td>
+            <td>{% widthratio v.1 totalPrice 100 %}%</td>
+        {% endfor %}
+<!--        <tr>-->
+<!--            <td>바닐라라떼</td>-->
+<!--            <td>13</td>-->
+<!--            <td>129,100</td>-->
+<!--            <td>16.84%</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>그린티라떼</td>-->
+<!--            <td>13</td>-->
+<!--            <td>129,100</td>-->
+<!--            <td>16.84%</td>-->
+<!--        </tr>-->
+        </tbody>
+    </table>
+</body>
+</html>

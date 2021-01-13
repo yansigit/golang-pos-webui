@@ -55,6 +55,22 @@
         preload: true
       });
 
+      HTMLElement.prototype.printMe = printMe;
+      function printMe(query){
+        var myframe = document.createElement('IFRAME');
+        myframe.domain = document.domain;
+        myframe.style.position = "absolute";
+        myframe.style.top = "-10000px";
+        document.body.appendChild(myframe);
+        myframe.contentDocument.write(this.innerHTML) ;
+        setTimeout(function(){
+          myframe.focus();
+          myframe.contentWindow.print();
+          myframe.parentNode.removeChild(myframe) ;// remove frame
+        },3000); // wait for images to load inside iframe
+        window.focus();
+      }
+
       function updateConfirmation( orderNumber ) {
         jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
           console.log( "Data Loaded: " + data );

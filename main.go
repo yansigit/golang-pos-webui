@@ -8,6 +8,7 @@ import (
 	"github.com/kataras/iris/v12/context"
 	"koisk-noti-desktop/data"
 	"strconv"
+	"time"
 )
 
 func main() {
@@ -32,6 +33,7 @@ func initWeb() {
 	app.Get("/orders", refreshedOrderList)
 	app.Get("/waits", refreshWaitNumbers)
 	app.Get("/out-display", outDisplay)
+	app.Get("/jungsan", jungSan)
 
 	app.Post("/", storeOrderList)
 	app.Post("/action", action)
@@ -175,4 +177,48 @@ func storeOrderList(ctx iris.Context) {
 func queue(ctx iris.Context) {
 	ctx.JSON(iris.Map{"new": newOrderAvailable})
 	newOrderAvailable = false
+}
+
+func jungSan(ctx iris.Context) {
+	var orders []data.Order
+	date := time.Date(2021, time.January, 3, 0, 0, 0, 0, time.UTC)
+	orders = data.FindOrderListWithDate(date)
+
+	totalPrice := 0
+	canceledCnt, canceledPrice := 0, 0
+	discountCnt, discountPrice := 0, 0
+
+	// 메뉴별 수량, 금액 카운트용
+	menuTable := make(map[string][]int)
+
+	for i := 0; i < len(orders); i++ {
+		data.Db.Model(&orders[i]).Association("Menus").Find(&orders[i].Menus)
+		if orders[i].IsConfirmed == 3 {
+			canceledCnt, canceledPrice = canceledCnt+1, canceledPrice+orders[i].TotalPrice
+		}
+		for _, menu := range orders[i].Menus {
+			if menu.IsTakeOut {
+				discountCnt, discountPrice = discountCnt+1, discountPrice+200
+			}
+			if menuTable[menu.Name] == nil {
+				menuTable[menu.Name] = []int{0, 0}
+			}
+			menuTable[menu.Name][0] += 1
+			menuTable[menu.Name][1] += menu.TotalPrice
+		}
+		totalPrice += orders[i].TotalPrice
+	}
+
+	args := map[string]interface{}{
+		"order_list":    orders,
+		"date":          date.Format("2006-01-02"),
+		"canceledCnt":   canceledCnt,
+		"canceledPrice": canceledPrice,
+		"discountCnt":   discountCnt,
+		"discountPrice": discountPrice,
+		"totalPrice":    totalPrice,
+		"menuTable":     menuTable,
+	}
+
+	_ = ctx.View("jungsan.html", args)
 }

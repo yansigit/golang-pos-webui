@@ -5,6 +5,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
+	"time"
 )
 
 //type OrderList struct {
@@ -45,29 +46,29 @@ type Order struct {
 	TotalPrice  int    `json:"totalPrice"`
 }
 
-var db *gorm.DB
+var Db *gorm.DB
 
 func init() {
 	var err error
-	db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	Db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		log.Println("Db 연결에 실패하였습니다.")
 		log.Fatal(err.Error())
 	}
 
 	// 테이블 자동 생성
-	err = db.AutoMigrate(&Order{}, &Menu{}, &Option{})
+	err = Db.AutoMigrate(&Order{}, &Menu{}, &Option{})
 	if err != nil {
 		panic("DB 초기화에 실패했습니다")
 	}
 }
 
 func GetMenusFromOrder(order Order, menu *[]Menu) {
-	_ = db.Model(order).Association("Menus").Find(menu)
+	_ = Db.Model(order).Association("Menus").Find(menu)
 }
 
 func GetOptionsFromMenu(menu Menu, option *[]Option) {
-	_ = db.Model(menu).Association("Options").Find(option)
+	_ = Db.Model(menu).Association("Options").Find(option)
 }
 
 func InsertOrderList(test []byte) uint {
@@ -77,7 +78,7 @@ func InsertOrderList(test []byte) uint {
 		log.Fatal(err)
 	}
 
-	db.Create(&order)
+	Db.Create(&order)
 	return order.ID
 }
 
@@ -94,7 +95,7 @@ func _InsertOrderList(test []byte) uint {
 		Menus:       nil,
 		TotalPrice:  order.TotalPrice,
 	}
-	db.Create(&tempOrder)
+	Db.Create(&tempOrder)
 
 	var tempMenus = make([]Menu, len(order.Menus))
 	copy(tempMenus, order.Menus)
@@ -102,7 +103,7 @@ func _InsertOrderList(test []byte) uint {
 		tempMenus[i].OrderId = tempOrder.ID
 		tempMenus[i].Options = nil
 	}
-	db.Create(&tempMenus)
+	Db.Create(&tempMenus)
 
 	for i, _ := range tempMenus {
 		var tempOptions = make([]Option, len(order.Menus[i].Options))
@@ -110,29 +111,34 @@ func _InsertOrderList(test []byte) uint {
 		for j, _ := range tempOptions {
 			tempOptions[j].MenuId = tempMenus[i].ID
 			if tempOptions[j].Quantity > 0 {
-				db.Create(&tempOptions[j])
+				Db.Create(&tempOptions[j])
 			}
 		}
 	}
 
 	tempOrder.Menus = tempMenus
-	db.Save(&tempOrder)
+	Db.Save(&tempOrder)
 
 	return tempOrder.ID
 }
 
 func FindOrderList(id uint) (orderList Order) {
-	db.First(&orderList, id)
+	Db.First(&orderList, id)
 	return orderList
 }
 
 func FindOrderListWithStatus(status int, limit int) (orders []Order) {
-	db.Where("is_confirmed = ?", status).Limit(limit).Find(&orders)
+	Db.Where("is_confirmed = ?", status).Limit(limit).Find(&orders)
+	return orders
+}
+
+func FindOrderListWithDate(date time.Time) (orders []Order) {
+	Db.Raw("SELECT * FROM orders WHERE strftime('%s', updated_at) BETWEEN strftime('%s', ?) AND strftime('%s', ?)", date.Format("2006-01-02"), date.AddDate(0, 0, 1).Format("2006-01-02")).Scan(&orders)
 	return orders
 }
 
 func Paging(page int, this interface{}) {
-	db.Scopes(paginate(page, 10)).Order("id desc").Find(this)
+	Db.Scopes(paginate(page, 10)).Order("id desc").Find(this)
 }
 
 func paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
@@ -156,8 +162,8 @@ func paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-//db.Scopes(Paginate(r)).Find(&users)
-//db.Scopes(Paginate(r)).Find(&articles)
+//Db.Scopes(Paginate(r)).Find(&users)
+//Db.Scopes(Paginate(r)).Find(&articles)
 
 // 컨펌 상태만 업데이트
 func UpdateOrderListConfirmation(orderNumber uint) {
@@ -165,17 +171,17 @@ func UpdateOrderListConfirmation(orderNumber uint) {
 	if orderList.IsConfirmed < 2 {
 		orderList.IsConfirmed += 1
 	}
-	db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
+	Db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
 }
 
 // 주문 취소
 func CancelOrderList(orderNumber uint) {
 	orderList := FindOrderList(orderNumber)
 	orderList.IsConfirmed = 3
-	db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
+	Db.Model(&orderList).Update("IsConfirmed", orderList.IsConfirmed)
 }
 
 func DeleteOrderList(orderNumber uint) {
 	orderList := FindOrderList(orderNumber)
-	db.Delete(&orderList)
+	Db.Delete(&orderList)
 }

@@ -9,7 +9,8 @@
                 <span class="badge badge-warning p-2">조리 완료</span>
                 {% elif order.IsConfirmed == 0 %}
                 <span class="badge badge-light p-2">조리 중</span>
-                <button type="button" class="btn btn-danger ml-auto kiosk-confirm-button" onclick="cancelOrderList({{ order.ID }})">주문 취소</button>
+                <button type="button" class="btn btn-sm btn-danger ml-auto kiosk-confirm-button" onclick="cancelOrderList({{ order.ID }})">취소</button>
+                <button type="button" class="btn btn-sm btn-dark ml-auto kiosk-confirm-button print-button" onclick="jQuery(this).closest('.list-group-item')[0].printMe()">프린트</button>
                 {% elif order.IsConfirmed == 2 %}
                 <span class="badge badge-success p-2">수령 완료</span>
                 {% elif order.IsConfirmed == 3 %}
