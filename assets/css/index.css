@@ -2,3 +2,7 @@
     display: inline-block;
     vertical-align: baseline;
 }
+
+footer {
+    margin-top: 70px;
+}
