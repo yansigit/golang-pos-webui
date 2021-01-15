@@ -6,3 +6,11 @@
 footer {
     margin-top: 70px;
 }
+
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}

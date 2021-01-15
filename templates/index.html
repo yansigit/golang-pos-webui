@@ -70,6 +70,8 @@
         myframe.style.top = "-10000px";
         document.body.appendChild(myframe);
         myframe.contentDocument.write(this.innerHTML) ;
+        let doc = myframe.contentDocument;
+        doc.body.innerHTML = doc.body.innerHTML + '<style>@media print{.no-print, .no-print * { display: none !important; }}</style>';
         setTimeout(function(){
           myframe.focus();
           myframe.contentWindow.print();
@@ -85,7 +87,7 @@
         window.location.reload();
       }
 
-      function insertBogus( ) {
+      function insertBogus(component) {
         jQuery.post( "/action", { action: "insertbogus" }, function( data ) {
           console.log( "Data Loaded: " + data );
         });

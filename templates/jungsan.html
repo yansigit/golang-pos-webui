@@ -10,6 +10,13 @@
         .td-header {
             border-bottom: 1px solid black; font-weight: bold
         }
+        @media print
+        {
+            .no-print, .no-print *
+            {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -86,7 +93,7 @@
 <!--        </tr>-->
         </tbody>
     </table>
-    <button onclick="document.getElementById().print()">프린트</button>
+    <button class="no-print" onclick="document.getElementById().print()">프린트</button>
 
     <script>
       HTMLElement.prototype.printMe = printMe;
