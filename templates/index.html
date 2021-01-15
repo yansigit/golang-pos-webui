@@ -32,9 +32,16 @@
         <div class="row">
             <ul class="list-group col-6"></ul>
             <div class="col-6" style="padding: 0">
-                <table class="w-100" id="waiting-num-table">
+                <table class="w-100" id="waiting-num-table"></table>
+<!--                <div class="card" style="margin-top:40px">-->
+<!--                    <div class="card-header text-center">-->
+<!--                        <h4 style="margin: 0">수동 대기번호 입력</h4>-->
+<!--                    </div>-->
+<!--                    <div class="border text-center">수동으로 대기번호를 넣습니다</div>-->
+<!--                    <div class="card-body">-->
 
-                </table>
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
     </div>
@@ -73,6 +80,13 @@
 
       function updateConfirmation( orderNumber ) {
         jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
+          console.log( "Data Loaded: " + data );
+        });
+        window.location.reload();
+      }
+
+      function insertBogus( ) {
+        jQuery.post( "/action", { action: "insertbogus" }, function( data ) {
           console.log( "Data Loaded: " + data );
         });
         window.location.reload();

@@ -18,6 +18,9 @@
                 {% endif %}
             </div>
             <div class="card-body">
+                {% if order.TotalPrice == -1 %}
+                <div class="text-center">수동으로 입력된 주문입니다</div>
+                {% else %}
                 {% if order.IsConfirmed != 3 %}
                 {% for menu in order.Menus %}
                 <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원)</strong>
@@ -37,7 +40,8 @@
                 </ul>
                 {% endfor %}
                 {% else %}
-                <span>취소된 주문입니다</span>
+                <div class="text-center">취소된 주문입니다</div>
+                {% endif %}
                 {% endif %}
             </div>
         </div>

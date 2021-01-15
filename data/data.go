@@ -82,6 +82,15 @@ func InsertOrderList(test []byte) uint {
 	return order.ID
 }
 
+func InsertBogusOrderList() {
+	order := Order{
+		IsConfirmed: 0,
+		Menus:       nil,
+		TotalPrice:  -1,
+	}
+	Db.Create(&order)
+}
+
 func _InsertOrderList(test []byte) uint {
 	var order Order
 	err := json.Unmarshal(test, &order)

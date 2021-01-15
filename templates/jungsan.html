@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-    <table>
+    <table id="jungsanTable">
         <caption><h3>판매집계표</h3><hr></caption>
         <caption>일시: {{date}}<hr></caption>
         <thead>
@@ -86,5 +86,24 @@
 <!--        </tr>-->
         </tbody>
     </table>
+    <button onclick="document.getElementById().print()">프린트</button>
+
+    <script>
+      HTMLElement.prototype.printMe = printMe;
+      function printMe(query){
+        var myframe = document.createElement('IFRAME');
+        myframe.domain = document.domain;
+        myframe.style.position = "absolute";
+        myframe.style.top = "-10000px";
+        document.body.appendChild(myframe);
+        myframe.contentDocument.write(this.innerHTML) ;
+        setTimeout(function(){
+          myframe.focus();
+          myframe.contentWindow.print();
+          myframe.parentNode.removeChild(myframe) ;// remove frame
+        },3000); // wait for images to load inside iframe
+        window.focus();
+      }
+    </script>
 </body>
 </html>

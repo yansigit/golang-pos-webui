@@ -158,6 +158,9 @@ func action(ctx iris.Context) {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
 		data.CancelOrderList(uint(orderNumber))
 	}
+	if action == "insertbogus" {
+		data.InsertBogusOrderList()
+	}
 }
 
 var newOrderAvailable bool = false
@@ -181,7 +184,7 @@ func queue(ctx iris.Context) {
 
 func jungSan(ctx iris.Context) {
 	var orders []data.Order
-	date := time.Date(2021, time.January, 3, 0, 0, 0, 0, time.UTC)
+	date := time.Now() //time.Date(2021, time.January, 3, 0, 0, 0, 0, time.UTC)
 	orders = data.FindOrderListWithDate(date)
 
 	totalPrice := 0
