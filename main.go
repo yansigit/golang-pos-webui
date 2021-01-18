@@ -29,10 +29,15 @@ func initWeb() {
 	app.HandleDir("/assets", "./assets")
 
 	app.Get("/", index)
+	// 새 주문 들어왔느지 확인
 	app.Get("/queue", queue)
+	// 왼쪽 오더 리스트
 	app.Get("/orders", refreshedOrderList)
+	// 오른쪽 대기번호 조정 패널
 	app.Get("/waits", refreshWaitNumbers)
+	// 외부 모니터 대기번호 출력
 	app.Get("/out-display", outDisplay)
+	// 정산
 	app.Get("/jungsan", jungSan)
 
 	app.Post("/", storeOrderList)
