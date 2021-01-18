@@ -33,6 +33,7 @@ func initWeb() {
 	app.Get("/queue", queue)
 	// 왼쪽 오더 리스트
 	app.Get("/orders", refreshedOrderList)
+	app.Get("/orders/{page:int}", refreshedOrderList)
 	// 오른쪽 대기번호 조정 패널
 	app.Get("/waits", refreshWaitNumbers)
 	// 외부 모니터 대기번호 출력
@@ -77,7 +78,12 @@ func outDisplay(ctx iris.Context) {
 
 func refreshedOrderList(ctx iris.Context) {
 	var orders []data.Order
-	data.Paging(1, &orders)
+	page, err := ctx.Params().GetInt("page")
+	if err != nil {
+		// fmt.Print(err)
+		page = 1
+	}
+	data.Paging(page, &orders)
 
 	for i, _ := range orders {
 		var menus []data.Menu

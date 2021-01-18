@@ -30,7 +30,38 @@
     </nav>
     <div class="container">
         <div class="row">
-            <ul class="list-group col-6"></ul>
+            <div class="col-6">
+                <ul class="list-group w-100"></ul>
+                <nav class="w-100">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" onclick="goPage(0)" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link page-click" >1</a></li>
+                        <li class="page-item"><a class="page-link page-click" >2</a></li>
+                        <li class="page-item"><a class="page-link page-click" >3</a></li>
+                        <li class="page-item"><a class="page-link page-click" >4</a></li>
+                        <li class="page-item"><a class="page-link page-click" >5</a></li>
+                        <li class="page-item"><a class="page-link page-click" >6</a></li>
+                        <li class="page-item"><a class="page-link page-click" >7</a></li>
+                        <li class="page-item"><a class="page-link page-click" >8</a></li>
+                        <li class="page-item"><a class="page-link page-click" >9</a></li>
+                        <li class="page-item"><a class="page-link page-click" >10</a></li>
+                        <li class="page-item"><a class="page-link page-click" >11</a></li>
+                        <li class="page-item"><a class="page-link page-click" >12</a></li>
+                        <li class="page-item"><a class="page-link page-click" >13</a></li>
+                        <li class="page-item">
+                            <a class="page-link" onclick="goPage(1)"  aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
             <div class="col-6" style="padding: 0">
                 <table class="w-100" id="waiting-num-table"></table>
 <!--                <div class="card" style="margin-top:40px">-->
@@ -109,8 +140,34 @@
         jQuery( "#waiting-num-table" ).replaceWith( data );
       });
 
+      var order_page = 1;
+
+      $(function() {
+
+        $('.page-click').on('click', function() {
+            order_page = $(this).text();
+            jQuery.get( "/orders/" + order_page, function( data ) {
+            jQuery( ".list-group" ).replaceWith( data );
+          });
+        });
+
+      });
+
+      function goPage(before_after) {
+          if (before_after === 0) {
+            order_page = parseInt(order_page) - 1;
+            console.log(order_page)
+          } else if (before_after === 1) {
+            order_page = parseInt(order_page) + 1;
+            console.log(order_page)
+          }
+          jQuery.get( "/orders/" + order_page, function( data ) {
+            jQuery( ".list-group" ).replaceWith( data );
+          });
+        }
+
       setInterval(function() {
-        jQuery.get( "/orders", function( data ) {
+        jQuery.get( "/orders/" + order_page, function( data ) {
           jQuery( ".list-group" ).replaceWith( data );
         });
 
@@ -121,6 +178,10 @@
         jQuery.get( "/queue", function( data ) {
           if (data.new === true) {
             ion.sound.play("bell_ring");
+            order_page = 1
+            jQuery.get( "/orders/", function( data ) {
+              jQuery( ".list-group" ).replaceWith( data );
+            });
           }
         });
       }, 3000);
