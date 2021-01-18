@@ -40,6 +40,7 @@ func initWeb() {
 	app.Get("/out-display", outDisplay)
 	// 정산
 	app.Get("/jungsan", jungSan)
+	app.Get("/jungsan/{date:string}", jungSan)
 
 	app.Post("/", storeOrderList)
 	app.Post("/action", action)
@@ -195,7 +196,18 @@ func queue(ctx iris.Context) {
 
 func jungSan(ctx iris.Context) {
 	var orders []data.Order
-	date := time.Now() //time.Date(2021, time.January, 3, 0, 0, 0, 0, time.UTC)
+	tmp_date := ctx.Params().GetString("date")
+
+	var date time.Time
+	var err error
+	if tmp_date == "" {
+		date = time.Now()
+	} else {
+		date, err = time.Parse("20060102", ctx.Params().Get("date"))
+		if err != nil {
+			date = time.Now()
+		}
+	}
 	orders = data.FindOrderListWithDate(date)
 
 	totalPrice := 0
