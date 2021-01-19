@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
-	"koisk-noti-desktop/data"
+	"kiosk-uou-pos/data"
 	"strconv"
 	"time"
 )

@@ -1,4 +1,4 @@
-module koisk-noti-desktop
+module kiosk-uou-pos
 
 go 1.15
 
