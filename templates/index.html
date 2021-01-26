@@ -86,7 +86,7 @@
       ion.sound({
         sounds: [
           {
-            name: "bell_ring"
+            name: "Iphone-Notification-Sound"
           }
         ],
         volume: 0.9,
@@ -178,7 +178,7 @@
 
         jQuery.get( "/queue", function( data ) {
           if (data.new === true) {
-            ion.sound.play("bell_ring");
+            ion.sound.play("Iphone-Notification-Sound");
             order_page = 1
             jQuery.get( "/orders/", function( data ) {
               jQuery( ".list-group" ).replaceWith( data );
