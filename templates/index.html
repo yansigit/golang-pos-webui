@@ -116,7 +116,8 @@
         jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
           console.log( "Data Loaded: " + data );
         });
-        window.location.reload();
+        ion.sound.play("Iphone-Notification-Sound");
+        setTimeout(() => {window.location.reload()}, 1000);
       }
 
       function insertBogus(component) {
