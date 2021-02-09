@@ -180,7 +180,7 @@
         jQuery.get( "/queue", function( data ) {
           if (data.new === true) {
             ion.sound.play("Iphone-Notification-Sound");
-            order_page = 1
+            order_page = 1;
             jQuery.get( "/orders/", function( data ) {
               jQuery( ".list-group" ).replaceWith( data );
             });

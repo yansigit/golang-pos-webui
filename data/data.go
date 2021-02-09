@@ -86,7 +86,7 @@ func InsertBogusOrderList() {
 	order := Order{
 		IsConfirmed: 0,
 		Menus:       nil,
-		TotalPrice:  -1,
+		TotalPrice:  0,
 	}
 	Db.Create(&order)
 }
