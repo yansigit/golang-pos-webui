@@ -23,7 +23,7 @@
                 {% else %}
                 {% if order.IsConfirmed != 3 %}
                 {% for menu in order.Menus %}
-                <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원)</strong>
+                <strong>{{ menu.Name }} ({{ menu.TotalPrice }}원) (온도: {{ menu.Temp }}</strong>
                 {% if menu.IsTakeOut %}
                 <span class="badge badge-danger">포장</span>
                 {% endif %}
