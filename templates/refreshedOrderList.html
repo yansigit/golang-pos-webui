@@ -31,6 +31,8 @@
                 <span class="badge badge-info">텀블러</span>
                 {% endif %}
                 <ul>
+                    <li>승인번호: {{ order.ApprovalNumber }}</li>
+                    <li>거래일자: {{ order.ApprovalDate }}</li>
                     <li>본품: ({{ menu.Price }}원)</li>
                     {% for option in menu.Options %}
                     {% if option.Quantity > 0 %}

@@ -41,9 +41,11 @@ type Menu struct {
 type Order struct {
 	gorm.Model
 	//Id          uint   `gorm:"primaryKey;unique;autoIncrement"`
-	IsConfirmed int    `gorm:"default:0"`
-	Menus       []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
-	TotalPrice  int    `json:"totalPrice"`
+	IsConfirmed    int    `gorm:"default:0"`
+	Menus          []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
+	TotalPrice     int    `json:"totalPrice"`
+	ApprovalDate   string `gorm:"default:'null'"`
+	ApprovalNumber string `gorm:"default:'null'"`
 }
 
 var Db *gorm.DB
