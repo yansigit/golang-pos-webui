@@ -119,7 +119,7 @@
         jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
           console.log( "Data Loaded: " + data );
         });
-        ion.sound.play("order_sound");
+        ion.sound.play("Iphone-Notification-Sound");
         setTimeout(() => {window.location.reload()}, 1000);
       }
 
@@ -182,7 +182,7 @@
 
         jQuery.get( "/queue", function( data ) {
           if (data.new === true) {
-            ion.sound.play("order_sound");
+            ion.sound.play("Iphone-Notification-Sound");
             order_page = 1;
             jQuery.get( "/orders/", function( data ) {
               jQuery( ".list-group" ).replaceWith( data );
