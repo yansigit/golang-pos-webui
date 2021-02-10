@@ -86,7 +86,10 @@
       ion.sound({
         sounds: [
           {
-            name: "Iphone-Notification-Sound"
+            name: "Iphone-Notification-Sound",
+          }
+          {
+            name: "order_sound",
           }
         ],
         volume: 0.9,
@@ -116,7 +119,7 @@
         jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
           console.log( "Data Loaded: " + data );
         });
-        ion.sound.play("Iphone-Notification-Sound");
+        ion.sound.play("order_sound");
         setTimeout(() => {window.location.reload()}, 1000);
       }
 
@@ -179,7 +182,7 @@
 
         jQuery.get( "/queue", function( data ) {
           if (data.new === true) {
-            ion.sound.play("Iphone-Notification-Sound");
+            ion.sound.play("order_sound");
             order_page = 1;
             jQuery.get( "/orders/", function( data ) {
               jQuery( ".list-group" ).replaceWith( data );
