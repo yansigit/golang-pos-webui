@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	fmt.Println("※ 키오스크 서버입니다. 창을 닫지 말아주세요. ※")
 	initWeb()
 }
 
