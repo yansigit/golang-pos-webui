@@ -40,12 +40,12 @@ type Menu struct {
 
 type Order struct {
 	gorm.Model
-	//Id          uint   `gorm:"primaryKey;unique;autoIncrement"`
+	// Id          uint   `gorm:"primaryKey"`
 	IsConfirmed    int    `gorm:"default:0"`
 	Menus          []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
 	TotalPrice     int    `json:"totalPrice"`
-	ApprovalDate   string `gorm:"default:'null'"`
-	ApprovalNumber string `gorm:"default:'null'"`
+	ApprovalDate   string `gorm:"default:'EMPTY'"`
+	ApprovalNumber string `gorm:"default:'EMPTY'"`
 }
 
 var Db *gorm.DB
@@ -60,6 +60,7 @@ func init() {
 
 	// 테이블 자동 생성
 	err = Db.AutoMigrate(&Order{}, &Menu{}, &Option{})
+	// Db.Raw("UPDATE SQLITE_SEQUENCE SET seq = 999 WHERE name = 'orders'")
 	if err != nil {
 		panic("DB 초기화에 실패했습니다")
 	}
