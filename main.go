@@ -14,6 +14,7 @@ import (
 func main() {
 	fmt.Println("※ 키오스크 서버입니다. 창을 닫지 말아주세요. ※")
 	initWeb()
+	fmt.Println("※ 서버가 동작중입니다. 웹 페이지의 알람 초기화 버튼을 눌러 알람기능을 동작시켜주세요. ※")
 }
 
 func initWeb() {
