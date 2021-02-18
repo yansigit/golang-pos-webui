@@ -3,18 +3,21 @@ package main
 import (
 	"bytes"
 	"crypto/md5"
+	"encoding/json"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/context"
 	"kiosk-uou-pos/data"
+	"log"
+	"net"
 	"strconv"
 	"time"
 )
 
 func main() {
 	fmt.Println("※ 키오스크 서버입니다. 창을 닫지 말아주세요. ※")
+	fmt.Println("※ 웹 페이지의 알람 초기화 버튼을 눌러 알람기능을 동작시켜주세요. ※")
 	initWeb()
-	fmt.Println("※ 서버가 동작중입니다. 웹 페이지의 알람 초기화 버튼을 눌러 알람기능을 동작시켜주세요. ※")
 }
 
 func initWeb() {
@@ -180,15 +183,33 @@ func action(ctx iris.Context) {
 var newOrderAvailable bool = false
 
 func storeOrderList(ctx iris.Context) {
-	test, _ := ctx.GetBody()
-	fmt.Printf("%x\n", md5.Sum(test))
-	id := data.InsertOrderList(test)
+	order, _ := ctx.GetBody()
+	fmt.Printf("%x\n", md5.Sum(order))
+	id := data.InsertOrderList(order)
 
 	newOrderAvailable = true
 
 	response := iris.Map{"state": "OK", "orderNumber": id}
 	ctx.JSON(response)
 	println(response)
+
+	var m map[string]interface{}
+	err := json.Unmarshal(order, &m)
+	m["orderNum"] = id
+	newOrderData, err := json.Marshal(m)
+	if err != nil {
+		log.Println("JSON 주문번호 추가 과정에서 에러가 발생했습니다")
+	}
+	connection, err := net.Dial("tcp", ":9292")
+	if err != nil {
+		log.Printf("프린터 서버가 켜져있지 않습니다.")
+	} else {
+		_, err := connection.Write(newOrderData)
+		if err != nil {
+			log.Printf("주문이 입력되었습니다. 프린트를 시작합니다.")
+		}
+		err = connection.Close()
+	}
 }
 
 func queue(ctx iris.Context) {
@@ -198,11 +219,11 @@ func queue(ctx iris.Context) {
 
 func jungSan(ctx iris.Context) {
 	var orders []data.Order
-	tmp_date := ctx.Params().GetString("date")
+	tmpDate := ctx.Params().GetString("date")
 
 	var date time.Time
 	var err error
-	if tmp_date == "" {
+	if tmpDate == "" {
 		date = time.Now()
 	} else {
 		date, err = time.Parse("20060102", ctx.Params().Get("date"))
