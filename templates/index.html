@@ -183,7 +183,7 @@
 
         jQuery.get( "/queue", function( data ) {
           if (data.new === true) {
-            ion.sound.play("order_sound", {volume: 8})
+            ion.sound.play("order_sound", {volume: 28})
             order_page = 1;
             jQuery.get( "/orders/", function( data ) {
               jQuery( ".list-group" ).replaceWith( data );
