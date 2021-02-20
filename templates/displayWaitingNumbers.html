@@ -14,12 +14,19 @@
             font-style: normal;
         }
 
+        @font-face {
+            font-family: 'Binggrae-Bold';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Binggrae-Bold.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
-            font-family: 'MaplestoryOTFBold',serif;
+            font-family: 'Binggrae-Bold',serif;
         }
     </style>
 </head>
-<body class="bg-dark row">
+<body class="bg-dark row" style="width: 100%; height: 100%">
     <section class="col-4">
         <h1 class="card-header badge-dark text-center text-white" style="font-size: 100px">완료</h1>
 
@@ -38,7 +45,7 @@
             {% for orders in unconfirmed_orders_array %}
                 <ul class="list-group bg-dark col">
                 {% for order in orders %}
-                <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: 100px;" class="text-white">{{order.ID}}</h1></li>
+                <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: 70px;" class="text-white">{{order.ID}}</h1></li>
                 {% endfor %}
                 </ul>
             {% endfor %}
