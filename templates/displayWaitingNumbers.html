@@ -26,8 +26,8 @@
         }
     </style>
 </head>
-<body class="bg-dark row" style="width: 100%; height: 100%">
-    <section class="col-4">
+<body class="bg-dark row" style="width: 100%; height: 100%; overflow: hidden;">
+    <section class="col-4 vh-100">
         <h1 class="card-header badge-dark text-center text-white" style="font-size: 100px">완료</h1>
 
         <div class="row">
@@ -38,7 +38,7 @@
             </ul>
         </div>
     </section>
-    <section class="col-8" style="background-color: #4e555b">
+    <section class="col-8 vh-100" style="background-color: #4e555b; height: 100%">
         <h1 class="card-header text-center text-white" style="background-color: #4e555b; font-size: 100px">조리중</h1>
 
         <div class="row">
@@ -52,7 +52,7 @@
         </div>
     </section>
     <script>
-        setInterval(() => {window.location.reload();}, 3000)
+        // setInterval(() => {window.location.reload();}, 3000)
     </script>
 </body>
 </html>
