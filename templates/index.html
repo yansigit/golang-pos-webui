@@ -34,29 +34,17 @@
         <div class="row">
             <div class="col-6">
                 <ul class="list-group w-100"></ul>
-                <nav class="w-100">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" onclick="goPage(0)" aria-label="Previous">
+                <nav class="w-100 mt-3">
+                    <ul class="pagination d-flex">
+                        <li class="page-item flex-fill">
+                            <a class="page-link text-center" onclick="goPage(0)" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li class="page-item"><a class="page-link page-click" >1</a></li>
-                        <li class="page-item"><a class="page-link page-click" >2</a></li>
-                        <li class="page-item"><a class="page-link page-click" >3</a></li>
-                        <li class="page-item"><a class="page-link page-click" >4</a></li>
-                        <li class="page-item"><a class="page-link page-click" >5</a></li>
-                        <li class="page-item"><a class="page-link page-click" >6</a></li>
-                        <li class="page-item"><a class="page-link page-click" >7</a></li>
-                        <li class="page-item"><a class="page-link page-click" >8</a></li>
-                        <li class="page-item"><a class="page-link page-click" >9</a></li>
-                        <li class="page-item"><a class="page-link page-click" >10</a></li>
-                        <li class="page-item"><a class="page-link page-click" >11</a></li>
-                        <li class="page-item"><a class="page-link page-click" >12</a></li>
-                        <li class="page-item"><a class="page-link page-click" >13</a></li>
-                        <li class="page-item">
-                            <a class="page-link" onclick="goPage(1)"  aria-label="Next">
+                        <li class="page-item flex-fill"><a class="page-link text-center" onclick="goPageFirst()" >처음으로</a></li>
+                        <li class="page-item flex-fill">
+                            <a class="page-link text-center" onclick="goPage(1)"  aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -158,6 +146,13 @@
         });
 
       });
+
+      function goPageFirst() {
+        order_page = 1;
+        jQuery.get( "/orders/" + 1, function( data ) {
+          jQuery( ".list-group" ).replaceWith( data );
+        });
+      }
 
       function goPage(before_after) {
           if (before_after === 0) {
