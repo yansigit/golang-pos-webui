@@ -33,19 +33,19 @@
         <div class="row">
             <ul class="list-group bg-dark col">
                 {% for order in confirmed_orders %}
-                <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: 100px;">{{order.ID}}</h1></li>
+                <li class="list-group-item bg-dark text-center text-warning" style="border:0;"><h1 style="font-size: 100px;">{{order.ID}}</h1></li>
                 {% endfor %}
             </ul>
         </div>
     </section>
-    <section class="col-8">
-        <h1 class="card-header badge-dark text-center text-white" style="font-size: 100px">조리중</h1>
+    <section class="col-8" style="background-color: #4e555b">
+        <h1 class="card-header text-center text-white" style="background-color: #4e555b; font-size: 100px">조리중</h1>
 
         <div class="row">
             {% for orders in unconfirmed_orders_array %}
-                <ul class="list-group bg-dark col">
+                <ul class="list-group col" style="border:0; background-color: #4e555b">
                 {% for order in orders %}
-                <li class="list-group-item bg-dark text-center text-warning"><h1 style="font-size: 100px;" class="text-white">{{order.ID}}</h1></li>
+                <li class="list-group-item text-center text-warning" style="border:0; background-color: #4e555b"><h1 style="font-size: 100px;" class="text-white">{{order.ID}}</h1></li>
                 {% endfor %}
                 </ul>
             {% endfor %}
