@@ -92,15 +92,43 @@
         </tbody>
     </table>
     <div>
-        <button class="no-print" onclick="print()">프린트</button>
+        <button class="no-print" onclick="printJungsan()">프린트</button>
     </div>
     <div>
         <input type="text" placeholder="20201122" id="date" />
         <button onclick="moveDate(document.getElementById('date').value)">날짜 선택</button>
     </div>
+    <script src="/assets/js/jquery.min.js"></script>
     <script>
         var moveDate = (value) => {
           window.location.replace("/jungsan/" + value)
+        }
+
+        var jungsan_data = {
+          action: "printJungsan",
+          date: "{{date}}",
+          discountCnt: "{{discountCnt}}",
+          discountPrice: "{{discountPrice}}",
+          canceledCnt: "{{canceledCnt}}",
+          canceledPrice: "{{canceledPrice}}",
+          totalCnt: "{{order_list|length}}",
+          totalPrice: "{{totalPrice}}",
+          sunCnt: "{{order_list|length - canceledCnt}}",
+          sunPrice: "{{totalPrice - canceledPrice - discountPrice}}"
+        }
+
+        var printJungsan = () => {
+          // $.ajax({
+          //   type: 'POST',
+          //   url: '/action',
+          //   data: {action: "printJungsan", body:JSON.stringify(jungsan_data)}, // or JSON.stringify ({name: 'jonas'}),
+          //   success: function(data) { alert('data: ' + data); },
+          //   contentType: "application/json",
+          //   dataType: 'json'
+          // });
+          jQuery.post( "/action", {action: jungsan_data.action, body:JSON.stringify(jungsan_data)}, function( data ) {
+            console.log( data );
+          });
         }
     </script>
 </body>

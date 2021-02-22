@@ -178,9 +178,28 @@ func action(ctx iris.Context) {
 	if action == "insertbogus" {
 		data.InsertBogusOrderList()
 	}
+	if action == "printJungsan" {
+		printJungsan(ctx.PostValue("body"))
+	}
 }
 
 var newOrderAvailable bool = false
+
+func printJungsan(data string) {
+	jungsanData := []byte(data)
+	fmt.Println(data)
+
+	connection, err := net.Dial("tcp", ":9292")
+	if err != nil {
+		log.Printf("프린터 서버가 켜져있지 않습니다.")
+	} else {
+		_, err := connection.Write(jungsanData)
+		if err != nil {
+			log.Printf("정산 내용이 들어왔습니다. 프린트를 시작합니다.")
+		}
+		err = connection.Close()
+	}
+}
 
 func storeOrderList(ctx iris.Context) {
 	order, _ := ctx.GetBody()
@@ -202,6 +221,7 @@ func storeOrderList(ctx iris.Context) {
 	}
 	connection, err := net.Dial("tcp", ":9292")
 	if err != nil {
+		fmt.Println(err)
 		log.Printf("프린터 서버가 켜져있지 않습니다.")
 	} else {
 		_, err := connection.Write(newOrderData)
