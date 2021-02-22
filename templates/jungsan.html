@@ -127,7 +127,11 @@
           //   dataType: 'json'
           // });
           jQuery.post( "/action", {action: jungsan_data.action, body:JSON.stringify(jungsan_data)}, function( data ) {
-            console.log( data );
+            console.log(data)
+            if (data === "ok")
+                alert("판매집계표 프린트를 시작했습니다.")
+            else
+              alert("프린트 실패")
           });
         }
     </script>
