@@ -72,6 +72,11 @@
     <script src="/assets/js/ion.sound.min.js"></script>
 
     <script>
+      var isLocal = false;
+
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+        isLocal = true;
+
       ion.sound({
         sounds: [
           {
@@ -175,16 +180,17 @@
         jQuery.get( "/waits", function( data ) {
           jQuery( "#waiting-num-table" ).replaceWith( data );
         });
-
-        jQuery.get( "/queue", function( data ) {
-          if (data.new === true) {
-            ion.sound.play("order_sound", {volume: 28})
-            order_page = 1;
-            jQuery.get( "/orders/", function( data ) {
-              jQuery( ".list-group" ).replaceWith( data );
-            });
-          }
-        });
+        if(isLocal) {
+          jQuery.get("/queue", function (data) {
+            if (data.new === true) {
+              ion.sound.play("order_sound", {volume: 28})
+              order_page = 1;
+              jQuery.get("/orders/", function (data) {
+                jQuery(".list-group").replaceWith(data);
+              });
+            }
+          });
+        }
       }, 3000);
     </script>
 
