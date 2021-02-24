@@ -194,7 +194,7 @@ func printJungsan(data string) bool {
 	jungsanData := []byte(data)
 	fmt.Println(data)
 
-	connection, err := net.Dial("tcp", ":9292")
+	connection, err := net.Dial("tcp", ":13522")
 	if err != nil {
 		log.Printf("프린터 서버가 켜져있지 않습니다.")
 		return false
@@ -226,7 +226,7 @@ func storeOrderList(ctx iris.Context) {
 	if err != nil {
 		log.Println("JSON 주문번호 추가 과정에서 에러가 발생했습니다")
 	}
-	connection, err := net.Dial("tcp", ":9292")
+	connection, err := net.Dial("tcp", ":13522")
 	if err != nil {
 		fmt.Println(err)
 		log.Printf("프린터 서버가 켜져있지 않습니다.")
