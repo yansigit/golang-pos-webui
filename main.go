@@ -250,15 +250,28 @@ func jungSan(ctx iris.Context) {
 
 	var date time.Time
 	var err error
+	isMonth := false
+
 	if tmpDate == "" {
 		date = time.Now()
-	} else {
+	} else if len(tmpDate) == 8 {
 		date, err = time.Parse("20060102", ctx.Params().Get("date"))
 		if err != nil {
 			date = time.Now()
 		}
+	} else if len(tmpDate) == 6 {
+		isMonth = true
+		date, err = time.Parse("200601", ctx.Params().Get("date"))
+		if err != nil {
+			date = time.Now()
+		}
 	}
-	orders = data.FindOrderListWithDate(date)
+
+	if isMonth {
+		orders = data.FindOrderListWithMonth(date)
+	} else {
+		orders = data.FindOrderListWithDate(date)
+	}
 
 	totalPrice := 0
 	canceledCnt, canceledPrice := 0, 0
@@ -286,6 +299,7 @@ func jungSan(ctx iris.Context) {
 	}
 
 	args := map[string]interface{}{
+		"switch":        "일별",
 		"order_list":    orders,
 		"date":          date.Format("2006-01-02"),
 		"canceledCnt":   canceledCnt,
@@ -294,6 +308,11 @@ func jungSan(ctx iris.Context) {
 		"discountPrice": discountPrice,
 		"totalPrice":    totalPrice,
 		"menuTable":     menuTable,
+	}
+
+	if isMonth {
+		args["date"] = date.Format("2006-01")
+		args["switch"] = "월별"
 	}
 
 	_ = ctx.View("jungsan.html", args)

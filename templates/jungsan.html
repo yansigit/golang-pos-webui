@@ -21,7 +21,7 @@
 </head>
 <body>
     <table id="jungsanTable">
-        <caption><h3>판매집계표</h3><hr>일시 : {{date}}<hr></caption>
+        <caption><h3>{{ switch }} 판매집계표</h3><hr>일시 : {{date}}<hr></caption>
         <thead>
         <tr>
             <th>구분</th>
@@ -118,14 +118,6 @@
         }
 
         var printJungsan = () => {
-          // $.ajax({
-          //   type: 'POST',
-          //   url: '/action',
-          //   data: {action: "printJungsan", body:JSON.stringify(jungsan_data)}, // or JSON.stringify ({name: 'jonas'}),
-          //   success: function(data) { alert('data: ' + data); },
-          //   contentType: "application/json",
-          //   dataType: 'json'
-          // });
           jQuery.post( "/action", {action: jungsan_data.action, body:JSON.stringify(jungsan_data)}, function( data ) {
             console.log(data)
             if (data === "ok")
