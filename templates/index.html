@@ -180,6 +180,7 @@
         jQuery.get( "/waits", function( data ) {
           jQuery( "#waiting-num-table" ).replaceWith( data );
         });
+        /*
         if(isLocal) {
           jQuery.get("/queue", function (data) {
             if (data.new === true) {
@@ -190,7 +191,7 @@
               });
             }
           });
-        }
+        } */
       }, 3000);
     </script>
 

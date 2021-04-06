@@ -35,7 +35,7 @@ func initWeb() {
 
 	app.Get("/", index)
 	// 새 주문 들어왔느지 확인
-	app.Get("/queue", queue)
+	// app.Get("/queue", queue)
 	// 왼쪽 오더 리스트
 	app.Get("/orders", refreshedOrderList)
 	app.Get("/orders/{page:int}", refreshedOrderList)
