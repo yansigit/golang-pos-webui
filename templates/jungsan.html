@@ -31,21 +31,21 @@
         </thead>
         <tbody>
         <tr>
-            <td class="td-header">총매출액</td>
-            <td class="td-header">{{order_list|length}}</td>
-            <td class="td-header">{{totalPrice}}</td>
+            <td style="border-bottom: 1px solid black">단순 매출</td>
+            <td style="border-bottom: 1px solid black">{{order_list|length}}</td>
+            <td style="border-bottom: 1px solid black">{{totalPrice}}</td>
         </tr>
         <tr>
-            <td>텀블러할인</td>
-            <td>{{discountCnt}}</td>
-            <td>{{discountPrice}}</td>
+            <td style="border-bottom: 1px solid black">취소</td>
+            <td style="border-bottom: 1px solid black">-{{canceledCnt}}</td>
+            <td style="border-bottom: 1px solid black">-{{canceledPrice}}</td>
         </tr>
         <tr>
-            <td>취소</td>
-            <td>{{canceledCnt}}</td>
-            <td>{{canceledPrice}}</td>
+            <td style="border-bottom: 1px solid black">텀블러할인</td>
+            <td style="border-bottom: 1px solid black">-{{discountCnt}}</td>
+            <td style="border-bottom: 1px solid black">-{{discountPrice}}</td>
         </tr>
-        <tr>
+        <tr style="font-weight: bold">
             <td>순매출액</td>
             <td>{{order_list|length - canceledCnt}}</td>
             <td>{{totalPrice - canceledPrice - discountPrice}}</td>
