@@ -145,12 +145,12 @@ func FindOrderListWithStatus(status int, limit int) (orders []Order) {
 }
 
 func FindOrderListWithDate(date time.Time) (orders []Order) {
-	Db.Raw("SELECT * FROM orders WHERE strftime('%s', updated_at) BETWEEN strftime('%s', ?) AND strftime('%s', ?)", date.Format("2006-01-02"), date.AddDate(0, 0, 1).Format("2006-01-02")).Scan(&orders)
+	Db.Raw("SELECT * FROM orders WHERE strftime('%s', created_at) BETWEEN strftime('%s', ?) AND strftime('%s', ?)", date.Format("2006-01-02"), date.AddDate(0, 0, 1).Format("2006-01-02")).Scan(&orders)
 	return orders
 }
 
 func FindOrderListWithMonth(date time.Time) (orders []Order) {
-	Db.Raw("SELECT * FROM orders WHERE strftime('%Y', updated_at) = strftime('%Y', ?) AND strftime('%m', updated_at) = strftime('%m', ?)", date.Format("2006-01-02"), date.Format("2006-01-02")).Scan(&orders)
+	Db.Raw("SELECT * FROM orders WHERE strftime('%Y', created_at) = strftime('%Y', ?) AND strftime('%m', updated_at) = strftime('%m', ?)", date.Format("2006-01-02"), date.Format("2006-01-02")).Scan(&orders)
 	// Db.Raw("SELECT * FROM orders WHERE strftime('%s', updated_at) BETWEEN strftime('%s', ?) AND strftime('%s', ?)", date.Format("2006-01-02"), date.AddDate(0, 1, 0).Format("2006-01-02")).Scan(&orders)
 	return orders
 }
