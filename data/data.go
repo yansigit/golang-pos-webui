@@ -145,12 +145,14 @@ func FindOrderListWithStatus(status int, limit int) (orders []Order) {
 }
 
 func FindOrderListWithDate(date time.Time) (orders []Order) {
-	Db.Raw("select * from orders where created_at like '%s%'", date.Format("2006-01-02")).Scan(&orders)
+	Db.Where("created_at LIKE ?", date.Format("2006-01-02")+"%").Find(&orders)
+	// Db.Raw(`select * from orders where created_at like '%s%'`, date.Format("2006-01-02")).Scan(&orders)
 	return orders
 }
 
 func FindOrderListWithMonth(date time.Time) (orders []Order) {
-	Db.Raw("select * from orders where created_at like '%s%'", date.Format("2006-01")).Scan(&orders)
+	Db.Where("created_at LIKE ?", date.Format("2006-01")+"%").Find(&orders)
+	// Db.Raw("select * from orders where created_at like '%s%'", date.Format("2006-01")).Scan(&orders)
 	// Db.Raw("SELECT * FROM orders WHERE strftime('%s', updated_at) BETWEEN strftime('%s', ?) AND strftime('%s', ?)", date.Format("2006-01-02"), date.AddDate(0, 1, 0).Format("2006-01-02")).Scan(&orders)
 	return orders
 }
