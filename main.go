@@ -188,6 +188,12 @@ func action(ctx iris.Context) {
 	}
 	if action == "reprint" {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
+		order := data.FindOrderList(uint(orderNumber))
+
+		var menus []data.Menu
+		data.GetMenusFromOrder(order, &menus)
+		order.Menus = menus
+
 		jsonBytes, err := json.Marshal(data.FindOrderList(uint(orderNumber)))
 		if err != nil {
 			panic("JSON으로 구조체를 변경하는데 문제가 있습니다")
