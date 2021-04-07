@@ -194,7 +194,7 @@ func action(ctx iris.Context) {
 		data.GetMenusFromOrder(order, &menus)
 		order.Menus = menus
 
-		jsonBytes, err := json.Marshal(data.FindOrderList(uint(orderNumber)))
+		jsonBytes, err := json.Marshal(order)
 		if err != nil {
 			panic("JSON으로 구조체를 변경하는데 문제가 있습니다")
 		}
