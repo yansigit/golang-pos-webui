@@ -194,6 +194,13 @@ func action(ctx iris.Context) {
 		data.GetMenusFromOrder(order, &menus)
 		order.Menus = menus
 
+		for j, _ := range order.Menus {
+			var options []data.Option
+			data.GetOptionsFromMenu(order.Menus[j], &options)
+			order.Menus[j].Options = make([]data.Option, len(options))
+			copy(order.Menus[j].Options, options)
+		}
+
 		jsonBytes, err := json.Marshal(order)
 		if err != nil {
 			panic("JSON으로 구조체를 변경하는데 문제가 있습니다")
