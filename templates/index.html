@@ -109,8 +109,8 @@
         window.focus();
       }
 
-      function printThisOrder( orderName ) {
-          jQuery.post( "/action", { action: "cancel", orderNumber: orderNumber }, function( data ) {
+      function printThisOrder( orderNumber ) {
+          jQuery.post( "/action", { action: "reprint", orderNumber: orderNumber }, function( data ) {
               alert( "Data Loaded: " + data );
           });
       }

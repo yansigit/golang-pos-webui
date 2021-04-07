@@ -186,7 +186,7 @@ func action(ctx iris.Context) {
 			ctx.Write([]byte("fail"))
 		}
 	}
-	if action == "printOrder" {
+	if action == "reprint" {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
 		jsonBytes, err := json.Marshal(data.FindOrderList(uint(orderNumber)))
 		if err != nil {
@@ -245,7 +245,7 @@ func printWithThermalPrinter(jsonBytes []byte) {
 	} else {
 		_, err := connection.Write(jsonBytes)
 		if err != nil {
-			log.Printf("주문이 입력되었습니다. 프린트를 시작합니다.")
+			log.Printf("주문 프린트 요청이 입력되었습니다. 프린트를 시작합니다.")
 		}
 		err = connection.Close()
 	}

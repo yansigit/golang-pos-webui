@@ -67,7 +67,7 @@
         <tr>
             <td class="td-header">전체</td>
             <td class="td-header">{{order_list|length}}</td>
-            <td class="td-header">{{totalPrice}}</td>
+            <td class="td-header">{{totalPrice - canceledPrice - discountPrice}}</td>
             <td class="td-header"></td>
         </tr>
         {% for k, v in menuTable %}
