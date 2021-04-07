@@ -32,7 +32,7 @@
     </nav>
     <div class="container">
         <div class="row">
-            <div class="col-6">
+            <div class="col">
                 <ul class="list-group w-100"></ul>
                 <nav class="w-100 mt-3">
                     <ul class="pagination d-flex">
@@ -52,19 +52,21 @@
                     </ul>
                 </nav>
             </div>
-            <div class="col-6" style="padding: 0">
-                <table class="w-100" id="waiting-num-table"></table>
-<!--                <div class="card" style="margin-top:40px">-->
-<!--                    <div class="card-header text-center">-->
-<!--                        <h4 style="margin: 0">수동 대기번호 입력</h4>-->
-<!--                    </div>-->
-<!--                    <div class="border text-center">수동으로 대기번호를 넣습니다</div>-->
-<!--                    <div class="card-body">-->
-
-<!--                    </div>-->
-<!--                </div>-->
-            </div>
         </div>
+        <!--
+        <div class="row">
+            <table class="w-100" id="waiting-num-table"></table>
+                <div class="card" style="margin-top:40px">
+                    <div class="card-header text-center">
+                        <h4 style="margin: 0">수동 대기번호 입력</h4>
+                    </div>
+                    <div class="border text-center">수동으로 대기번호를 넣습니다</div>
+                   <div class="card-body">
+
+                    </div>
+                </div>
+        </div>
+        -->
     </div>
 
     <script src="/assets/js/jquery.min.js"></script>
@@ -141,9 +143,10 @@
         jQuery( ".list-group" ).replaceWith( data );
       });
 
+      /*
       jQuery.get( "/waits", function( data ) {
         jQuery( "#waiting-num-table" ).replaceWith( data );
-      });
+      }); */
 
       var order_page = 1;
 
@@ -183,9 +186,10 @@
           jQuery( ".list-group" ).replaceWith( data );
         });
 
+        /*
         jQuery.get( "/waits", function( data ) {
           jQuery( "#waiting-num-table" ).replaceWith( data );
-        });
+        }); */
         /*
         if(isLocal) {
           jQuery.get("/queue", function (data) {
