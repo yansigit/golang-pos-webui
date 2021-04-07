@@ -109,6 +109,12 @@
         window.focus();
       }
 
+      function printThisOrder( orderName ) {
+          jQuery.post( "/action", { action: "cancel", orderNumber: orderNumber }, function( data ) {
+              alert( "Data Loaded: " + data );
+          });
+      }
+
       function updateConfirmation( orderNumber ) {
         jQuery.post( "/action", { action: "confirm", orderNumber: orderNumber }, function( data ) {
           console.log( "Data Loaded: " + data );

@@ -9,11 +9,13 @@
                 <span class="badge badge-warning p-2">조리 완료</span>
                 {% elif order.IsConfirmed == 0 %}
                 <span class="badge badge-light p-2 no-print">조리 중</span>
-                <button type="button" class="btn btn-lg btn-danger ml-auto kiosk-confirm-button no-print" onclick="cancelOrderList({{ order.ID }})">취소</button>
                 {% elif order.IsConfirmed == 2 %}
                 <span class="badge badge-success p-2">수령 완료</span>
                 {% elif order.IsConfirmed == 3 %}
                 <span class="badge badge-dark p-2">취소 완료</span>
+                {% elif order.IsConfirmed != 3 %}
+                <button type="button" class="btn btn-lg btn-danger ml-auto kiosk-confirm-button no-print" onclick="cancelOrderList({{ order.ID }})">취소</button>
+                    <button type="button" class="btn btn-lg btn-outline-warning ml-auto kiosk-confirm-button no-print" onclick="printThisOrder({{ order.ID }})">영수증 출력</button>
                 {% endif %}
             </div>
             <div class="card-header">

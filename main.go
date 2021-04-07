@@ -186,6 +186,14 @@ func action(ctx iris.Context) {
 			ctx.Write([]byte("fail"))
 		}
 	}
+	if action == "printOrder" {
+		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
+		jsonBytes, err := json.Marshal(data.FindOrderList(uint(orderNumber)))
+		if err != nil {
+			panic("JSON으로 구조체를 변경하는데 문제가 있습니다")
+		}
+		printWithThermalPrinter(jsonBytes)
+	}
 }
 
 var newOrderAvailable bool = false
@@ -226,12 +234,16 @@ func storeOrderList(ctx iris.Context) {
 	if err != nil {
 		log.Println("JSON 주문번호 추가 과정에서 에러가 발생했습니다")
 	}
+	printWithThermalPrinter(newOrderData)
+}
+
+func printWithThermalPrinter(jsonBytes []byte) {
 	connection, err := net.Dial("tcp", ":13522")
 	if err != nil {
 		fmt.Println(err)
 		log.Printf("프린터 서버가 켜져있지 않습니다.")
 	} else {
-		_, err := connection.Write(newOrderData)
+		_, err := connection.Write(jsonBytes)
 		if err != nil {
 			log.Printf("주문이 입력되었습니다. 프린트를 시작합니다.")
 		}

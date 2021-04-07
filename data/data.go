@@ -41,11 +41,14 @@ type Menu struct {
 type Order struct {
 	gorm.Model
 	// Id          uint   `gorm:"primaryKey"`
-	IsConfirmed    int    `gorm:"default:0"`
+	IsConfirmed    int    `gorm:"default:2"`
 	Menus          []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
 	TotalPrice     int    `json:"totalPrice"`
 	ApprovalDate   string `gorm:"default:'EMPTY'"`
 	ApprovalNumber string `gorm:"default:'EMPTY'"`
+	CardCompany    string `json:"cardCompany" gorm:"default:'EMPTY'"`
+	AqCompany      string `json:"aqCompany" gorm:"default:'EMPTY'"`
+	CardNumber     string `json:"cardNumber" gorm:"default:'EMPTY'"`
 }
 
 var Db *gorm.DB
@@ -74,9 +77,9 @@ func GetOptionsFromMenu(menu Menu, option *[]Option) {
 	_ = Db.Model(menu).Association("Options").Find(option)
 }
 
-func InsertOrderList(test []byte) uint {
+func InsertOrderList(orderBytes []byte) uint {
 	var order Order
-	err := json.Unmarshal(test, &order)
+	err := json.Unmarshal(orderBytes, &order)
 	if err != nil {
 		log.Fatal(err)
 	}
