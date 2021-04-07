@@ -201,9 +201,19 @@ func action(ctx iris.Context) {
 			copy(order.Menus[j].Options, options)
 		}
 
+		var m map[string]interface{}
 		jsonBytes, err := json.Marshal(order)
 		if err != nil {
 			panic("JSON으로 구조체를 변경하는데 문제가 있습니다")
+		}
+		err = json.Unmarshal(jsonBytes, &m)
+		if err != nil {
+			panic("JSON을 맵으로 변경하는데 문제가 있습니다")
+		}
+		m["action"] = "reprint"
+		jsonBytes, err = json.Marshal(m)
+		if err != nil {
+			panic("맵을 JSON으로 변경하는데 문제가 있습니다")
 		}
 		printWithThermalPrinter(jsonBytes)
 	}
