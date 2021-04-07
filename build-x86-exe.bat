@@ -1,1 +1,3 @@
-set GOOS=windows; set GOARCH=x86; go build -o kiosk-uou-pos.exe
+set GOOS=windows
+set GOARCH=386
+go build -o kiosk-uou-pos.exe
