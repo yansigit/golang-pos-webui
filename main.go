@@ -211,6 +211,7 @@ func action(ctx iris.Context) {
 			panic("JSON을 맵으로 변경하는데 문제가 있습니다")
 		}
 		m["action"] = "reprint"
+		m["orderNum"] = m["ID"]
 		jsonBytes, err = json.Marshal(m)
 		if err != nil {
 			panic("맵을 JSON으로 변경하는데 문제가 있습니다")
