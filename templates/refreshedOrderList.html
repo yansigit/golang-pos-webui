@@ -15,8 +15,8 @@
                 <span class="badge badge-dark p-2">취소 완료</span>
                 {% endif %}
                 {% if order.IsConfirmed != 3 %}
-                <button type="button" class="btn btn-lg btn-danger ml-auto kiosk-confirm-button no-print" onclick="cancelOrderList({{ order.ID }})">취소</button>
-                <button type="button" class="btn btn-lg btn-outline-warning ml-auto kiosk-confirm-button no-print" onclick="printThisOrder({{ order.ID }})">영수증 출력</button>
+                <button type="button" class="btn btn-sm btn-danger ml-auto kiosk-confirm-button no-print" style="height: 28px" onclick="cancelOrderList({{ order.ID }})">취소</button>
+                <button type="button" class="btn btn-sm btn-info ml-auto kiosk-confirm-button no-print" style="height: 28px" onclick="printThisOrder({{ order.ID }})">영수증 출력</button>
                 {% endif %}
             </div>
             <div class="card-header">
