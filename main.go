@@ -322,7 +322,7 @@ func jungSan(ctx iris.Context) {
 			canceledCnt, canceledPrice = canceledCnt+1, canceledPrice+orders[i].TotalPrice
 		}
 		for _, menu := range orders[i].Menus {
-			if menu.IsTakeOut {
+			if menu.IsTumbler {
 				discountCnt, discountPrice = discountCnt+1, discountPrice+200
 			}
 			if menuTable[menu.Name] == nil {
