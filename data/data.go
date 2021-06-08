@@ -40,7 +40,7 @@ type Menu struct {
 
 type Order struct {
 	gorm.Model
-	// Id          uint   `gorm:"primaryKey"`
+	TodayIndex     int    `gorm:"default:-1"`
 	IsConfirmed    int    `gorm:"default:2"`
 	Menus          []Menu `gorm:"foreignKey:OrderId;references:ID" json:"menus"`
 	TotalPrice     int    `json:"totalPrice"`
@@ -52,10 +52,29 @@ type Order struct {
 }
 
 var Db *gorm.DB
+var todayIndex int = 0
 
 func init() {
 	var err error
-	Db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+
+	Db, err = gorm.Open(sqlite.Open(time.Now().Format("200601")+".db"), &gorm.Config{})
+	if err != nil {
+		log.Println("Db 연결에 실패하였습니다.")
+		log.Fatal(err.Error())
+	}
+
+	// 테이블 자동 생성
+	err = Db.AutoMigrate(&Order{}, &Menu{}, &Option{})
+	// Db.Raw("UPDATE SQLITE_SEQUENCE SET seq = 999 WHERE name = 'orders'")
+	if err != nil {
+		panic("DB 초기화에 실패했습니다")
+	}
+}
+
+func ChangeDBFile(path string) {
+	var err error
+
+	Db, err = gorm.Open(sqlite.Open(path+".db"), &gorm.Config{})
 	if err != nil {
 		log.Println("Db 연결에 실패하였습니다.")
 		log.Fatal(err.Error())
@@ -77,64 +96,28 @@ func GetOptionsFromMenu(menu Menu, option *[]Option) {
 	_ = Db.Model(menu).Association("Options").Find(option)
 }
 
-func InsertOrderList(orderBytes []byte) uint {
+func InsertOrderList(orderBytes []byte) Order {
 	var order Order
 	err := json.Unmarshal(orderBytes, &order)
 	if err != nil {
 		log.Fatal(err)
 	}
+	todayIndex += 1
+	order.TodayIndex = todayIndex
 
 	Db.Create(&order)
-	return order.ID
+	return order
 }
 
 func InsertBogusOrderList() {
+	todayIndex += 1
 	order := Order{
+		TodayIndex:  todayIndex,
 		IsConfirmed: 0,
 		Menus:       nil,
 		TotalPrice:  0,
 	}
 	Db.Create(&order)
-}
-
-func _InsertOrderList(test []byte) uint {
-	var order Order
-	err := json.Unmarshal(test, &order)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var tempOrder Order
-	tempOrder = Order{
-		IsConfirmed: 0,
-		Menus:       nil,
-		TotalPrice:  order.TotalPrice,
-	}
-	Db.Create(&tempOrder)
-
-	var tempMenus = make([]Menu, len(order.Menus))
-	copy(tempMenus, order.Menus)
-	for i, _ := range tempMenus {
-		tempMenus[i].OrderId = tempOrder.ID
-		tempMenus[i].Options = nil
-	}
-	Db.Create(&tempMenus)
-
-	for i, _ := range tempMenus {
-		var tempOptions = make([]Option, len(order.Menus[i].Options))
-		copy(tempOptions, order.Menus[i].Options)
-		for j, _ := range tempOptions {
-			tempOptions[j].MenuId = tempMenus[i].ID
-			if tempOptions[j].Quantity > 0 {
-				Db.Create(&tempOptions[j])
-			}
-		}
-	}
-
-	tempOrder.Menus = tempMenus
-	Db.Save(&tempOrder)
-
-	return tempOrder.ID
 }
 
 func FindOrderList(id uint) (orderList Order) {

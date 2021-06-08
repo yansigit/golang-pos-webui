@@ -170,23 +170,26 @@ func action(ctx iris.Context) {
 	if action == "confirm" {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
 		data.UpdateOrderListConfirmation(uint(orderNumber))
-	}
-	if action == "cancel" {
+		_, _ = ctx.Text("confirmed")
+		return
+	} else if action == "cancel" {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
 		data.CancelOrderList(uint(orderNumber))
-	}
-	if action == "insertbogus" {
+		_, _ = ctx.Text("canceled")
+		return
+	} else if action == "insertbogus" {
 		data.InsertBogusOrderList()
-	}
-	if action == "printJungsan" {
+		_, _ = ctx.Text("inserted bogus")
+		return
+	} else if action == "printJungsan" {
 		result := printJungsan(ctx.PostValue("body"))
 		if result {
 			ctx.Write([]byte("ok"))
 		} else {
 			ctx.Write([]byte("fail"))
 		}
-	}
-	if action == "reprint" {
+		return
+	} else if action == "reprint" {
 		orderNumber, _ := strconv.Atoi(ctx.PostValue("orderNumber"))
 		order := data.FindOrderList(uint(orderNumber))
 
@@ -211,13 +214,18 @@ func action(ctx iris.Context) {
 			panic("JSON을 맵으로 변경하는데 문제가 있습니다")
 		}
 		m["action"] = "reprint"
-		m["orderNum"] = m["ID"]
+		// m["orderNum"] = m["ID"]
+		m["orderNum"] = m["TodayIndex"]
 		jsonBytes, err = json.Marshal(m)
 		if err != nil {
 			panic("맵을 JSON으로 변경하는데 문제가 있습니다")
 		}
 		printWithThermalPrinter(jsonBytes)
+		_, _ = ctx.Text("reprinted")
+		return
 	}
+	_, _ = ctx.Text("알 수 없는 명령입니다")
+	return
 }
 
 var newOrderAvailable bool = false
@@ -243,17 +251,17 @@ func printJungsan(data string) bool {
 func storeOrderList(ctx iris.Context) {
 	order, _ := ctx.GetBody()
 	fmt.Printf("%x\n", md5.Sum(order))
-	id := data.InsertOrderList(order)
+	result := data.InsertOrderList(order)
 
 	newOrderAvailable = true
 
-	response := iris.Map{"state": "OK", "orderNumber": id}
+	response := iris.Map{"state": "OK", "orderNumber": result.TodayIndex}
 	ctx.JSON(response)
 	println(response)
 
 	var m map[string]interface{}
 	err := json.Unmarshal(order, &m)
-	m["orderNum"] = id
+	m["orderNum"] = result.TodayIndex
 	newOrderData, err := json.Marshal(m)
 	if err != nil {
 		log.Println("JSON 주문번호 추가 과정에서 에러가 발생했습니다")
@@ -301,7 +309,11 @@ func jungSan(ctx iris.Context) {
 		if err != nil {
 			date = time.Now()
 		}
+	} else {
+		_, _ = ctx.Text("날짜 형식에 문제가 있습니다")
+		return
 	}
+	data.ChangeDBFile(date.Format("200601"))
 
 	if isMonth {
 		orders = data.FindOrderListWithMonth(date)
@@ -350,6 +362,8 @@ func jungSan(ctx iris.Context) {
 		args["date"] = date.Format("2006-01")
 		args["switch"] = "월별"
 	}
+
+	data.ChangeDBFile(time.Now().Format("200601"))
 
 	_ = ctx.View("jungsan.html", args)
 }
